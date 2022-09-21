@@ -1,0 +1,14 @@
+.ToDoLogo {
+  display: flex;
+  align-items: center;
+}
+
+.ToDoLogo img {
+  height: 36px;
+  margin: 0 14px;
+}
+
+.ToDoLogo span {
+  font-weight: 900;
+  font-size: 40px;
+}
