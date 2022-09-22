@@ -1,22 +1,43 @@
 import { Circle, Check, Trash } from 'phosphor-react';
+import { useState } from 'react';
 
 import styles from './TaskCard.module.css';
 
 interface TaskCardProps {
-  key: String;
+  id: String;
   taskMessage: String;
   isTaskComplete: Boolean;
+  onCompleteTask: () => void;
+  onDeleteTask: (taskKey : String) => void;
 }
 
-export function TaskCard({taskMessage, isTaskComplete} : TaskCardProps) {
 
+export function TaskCard({...props} : TaskCardProps) {
+
+  const [taskCompleteState, setNewTaskCompleteState] = useState(props.isTaskComplete)
+
+  // Deletar?
+  const toggleIsTaskCompleteState = async () => {
+      setNewTaskCompleteState(!taskCompleteState)
+  }
+
+  // Precisa de masi trabalho aqui
+  const handleCompleteTask = async () => {
+    props.onCompleteTask()
+
+    setNewTaskCompleteState(!taskCompleteState)
+  }
+
+  const handleDeleteTask = async () => {
+    props.onDeleteTask(props.id)
+  }
   
   return (
-    <div className={ isTaskComplete ?  styles.checked : styles.taskCard}>
+    <div className={ taskCompleteState ?  styles.checked : styles.taskCard}>
 
-    <button className={styles.checkMark}>
+    <button onClick={ handleCompleteTask } className={styles.checkMark}>
       {
-        isTaskComplete 
+        taskCompleteState 
         ?
           <Check size={24} />
         :
@@ -26,9 +47,10 @@ export function TaskCard({taskMessage, isTaskComplete} : TaskCardProps) {
     </button>
 
       <div className={styles.taskCardMessage}>
-        <p>{taskMessage}</p>
+        <p>{props.taskMessage}</p>
       </div>
-      <button className={styles.deleteTask}>
+
+      <button onClick={handleDeleteTask} className={styles.deleteTask}>
         <Trash size={24} />
       </button>
 

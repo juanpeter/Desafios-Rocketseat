@@ -11,28 +11,11 @@ interface Task {
   isTaskCompleted: boolean;
 }
 
-let demoTasks = [
-  {
-    id: uuidv4(),
-    taskMessage: 'Integer urna interdum massa libero auctor neque turpis turpis semper. Duis vel sed fames integer.',
-    isTaskCompleted: false
-  },
-  {
-    id: uuidv4(),
-    taskMessage: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum',
-    isTaskCompleted: true
-  },
-  {
-    id: uuidv4(),
-    taskMessage: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.',
-    isTaskCompleted: false
-  }
-]
-
 export function TodoList() {
 
-  // UseState das task, armazena id, mensagem e se está completa
   const [tasks, setNewTasks] = useState([] as Task[])
+
+  const [completedTasks, setNewCompletedTasks] = useState([] as Task[])
 
   const handleCreateNewTask = async (event : FormEvent) => {
     event.preventDefault();
@@ -43,13 +26,38 @@ export function TodoList() {
       isTaskCompleted: false
     }
 
-    setNewTasks([...tasks, newTask])
+    // Colocar aqui?
+    // handleNewCompletedTasks
+    // console.log(completedTasks.length)
 
+    setNewTasks([...tasks, newTask])
+  }
+
+  const handleDeleteTask = async (taskKey : String) => {
+
+    const taskWithoutDeletedTask = 
+    tasks.filter(task => {
+      return task.id !== taskKey
+    })
+    
+    setNewTasks(taskWithoutDeletedTask)
+  }
+
+  // Precise de mais trabalho aqui
+  const handleNewCompletedTasks = async () => {
+
+    const newCompletedTasks = tasks.filter(
+      task => {
+        return task.isTaskCompleted === true
+      }
+    )
+    setNewCompletedTasks(newCompletedTasks)
   }
 
   return (
 
     <article>
+      
       <form onSubmit={handleCreateNewTask} className={styles.taskForm}>
         <input 
           name='inputTask'
@@ -59,42 +67,36 @@ export function TodoList() {
         <button type="submit" className={styles.createButton}>
           <span>Criar</span>
           <PlusCircle alt='Criar' size={16} />
-
         </button>
       </form>
 
       <div className={styles.mainContent}>
         <aside>
           <div>
-
-            {/* Mostrar tarefas criadas */}
-
             <span className='blueText'>Tarefas criadas</span>
-            <span>0</span>
+            <span>{tasks.length}</span>
           </div>
-          <div>
-
-            {/* Mostrar tarefas concluídas */}
-            
+          <div>            
             <span className='purpleText'>Concluídas</span>
-            <span>0</span>
+            {/* Mostrar tasks concluidas e tasks totais */}
+            <span>{`${ completedTasks.length } de ${ tasks.length }`}</span>
           </div>
         </aside>
         
         {
-          //Criar loop de TaskCards se houverem Tasks
           tasks.length > 0 ? 
               tasks.map(task => {
                 return (
                   <TaskCard 
                   key={task.id}
+                  id={task.id}
                   taskMessage={task.taskMessage}
                   isTaskComplete={task.isTaskCompleted}
+                  onCompleteTask={handleNewCompletedTasks}
+                  onDeleteTask={handleDeleteTask}
                   />
                 )
               })
-
-          //Se não tive, mostrar esse HTML
           :
             <div className={styles.taskList}>
               <ClipboardText size={56} />
