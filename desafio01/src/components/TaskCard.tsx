@@ -7,7 +7,7 @@ interface TaskCardProps {
   id: String;
   taskMessage: String;
   isTaskComplete: Boolean;
-  onCompleteTask: () => void;
+  onCompleteTask: (taskKey : String) => void;
   onDeleteTask: (taskKey : String) => void;
 }
 
@@ -16,16 +16,10 @@ export function TaskCard({...props} : TaskCardProps) {
 
   const [taskCompleteState, setNewTaskCompleteState] = useState(props.isTaskComplete)
 
-  // Deletar?
-  const toggleIsTaskCompleteState = async () => {
-      setNewTaskCompleteState(!taskCompleteState)
-  }
-
-  // Precisa de masi trabalho aqui
   const handleCompleteTask = async () => {
-    props.onCompleteTask()
-
     setNewTaskCompleteState(!taskCompleteState)
+
+    props.onCompleteTask(props.id)
   }
 
   const handleDeleteTask = async () => {

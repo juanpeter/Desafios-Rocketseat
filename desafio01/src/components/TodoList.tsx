@@ -1,5 +1,5 @@
 import { ClipboardText, PlusCircle } from 'phosphor-react'
-import { FormEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, InvalidEvent, useState } from 'react'
 import { TaskCard } from './TaskCard'
 import {v4 as uuidv4} from 'uuid';
 
@@ -17,6 +17,8 @@ export function TodoList() {
 
   const [completedTasks, setNewCompletedTasks] = useState([] as Task[])
 
+  const [taskMessage, setNewTaskMessage] = useState('')
+
   const handleCreateNewTask = async (event : FormEvent) => {
     event.preventDefault();
 
@@ -26,33 +28,59 @@ export function TodoList() {
       isTaskCompleted: false
     }
 
-    // Colocar aqui?
-    // handleNewCompletedTasks
-    // console.log(completedTasks.length)
-
     setNewTasks([...tasks, newTask])
+
+    setNewTaskMessage('')
   }
 
-  const handleDeleteTask = async (taskKey : String) => {
-
+  const handleDeleteTask = async (taskKey : string) => {
     const taskWithoutDeletedTask = 
     tasks.filter(task => {
       return task.id !== taskKey
     })
     
     setNewTasks(taskWithoutDeletedTask)
+
+    const completedTaskWithoutDeletedTask = 
+    completedTasks.filter(task => {
+      return task.id !== taskKey
+    })
+
+    setNewCompletedTasks(completedTaskWithoutDeletedTask)
   }
 
-  // Precise de mais trabalho aqui
-  const handleNewCompletedTasks = async () => {
+  const handleNewCompletedTasks = async (taskKey : string) => {
 
-    const newCompletedTasks = tasks.filter(
+    tasks.forEach(
+      task => {
+        if (task.id === taskKey) {
+          task.isTaskCompleted = !task.isTaskCompleted
+        }
+      }
+    )
+    
+    const newCompletedTasks = 
+    tasks.filter(
       task => {
         return task.isTaskCompleted === true
       }
     )
+
     setNewCompletedTasks(newCompletedTasks)
   }
+
+  const handleNewTaskMessageChange = async (event : ChangeEvent<HTMLInputElement>) => {
+    event.target.setCustomValidity('')
+    setNewTaskMessage(event.target.value)
+  }
+
+  // Não tá chengando aqui
+  const handleNewTaskMessageInvalid = async (event : InvalidEvent<HTMLInputElement>) => {
+    console.log('cu')
+    event.target.setCustomValidity('Esse campo é obrigatório!')
+  }
+
+  const isNewTaskEmpty = taskMessage.length === 0
 
   return (
 
@@ -62,9 +90,17 @@ export function TodoList() {
         <input 
           name='inputTask'
           type="text" 
-          placeholder='Adicione uma nova tarefa' 
+          placeholder='Adicione uma nova tarefa'
+          value={taskMessage}
+          onChange={handleNewTaskMessageChange}
+          onInvalid={handleNewTaskMessageInvalid}
+          required
         />
-        <button type="submit" className={styles.createButton}>
+        <button 
+          type="submit" 
+          className={styles.createButton}
+          disabled={isNewTaskEmpty}
+          >
           <span>Criar</span>
           <PlusCircle alt='Criar' size={16} />
         </button>
