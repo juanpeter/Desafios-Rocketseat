@@ -24,7 +24,7 @@ export function TodoList() {
 
     const newTask : Task = {
       id: uuidv4(),
-      taskMessage: event.target.inputTask.value,
+      taskMessage: taskMessage,
       isTaskCompleted: false
     }
 

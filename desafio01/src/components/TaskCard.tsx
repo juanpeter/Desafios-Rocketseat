@@ -4,11 +4,11 @@ import { useState } from 'react';
 import styles from './TaskCard.module.css';
 
 interface TaskCardProps {
-  id: String;
-  taskMessage: String;
+  id: string;
+  taskMessage: string;
   isTaskComplete: Boolean;
-  onCompleteTask: (taskKey : String) => void;
-  onDeleteTask: (taskKey : String) => void;
+  onCompleteTask: (taskKey : string) => Promise<void>;
+  onDeleteTask: (taskKey : string) => Promise<void>;
 }
 
 
