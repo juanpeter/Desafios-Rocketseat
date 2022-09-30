@@ -74,13 +74,9 @@ export function TodoList() {
     setNewTaskMessage(event.target.value)
   }
 
-  // Não tá chengando aqui
   const handleNewTaskMessageInvalid = async (event : InvalidEvent<HTMLInputElement>) => {
-    console.log('cu')
     event.target.setCustomValidity('Esse campo é obrigatório!')
   }
-
-  const isNewTaskEmpty = taskMessage.length === 0
 
   return (
 
@@ -99,7 +95,6 @@ export function TodoList() {
         <button 
           type="submit" 
           className={styles.createButton}
-          disabled={isNewTaskEmpty}
           >
           <span>Criar</span>
           <PlusCircle alt='Criar' size={16} />
@@ -114,7 +109,6 @@ export function TodoList() {
           </div>
           <div>            
             <span className='purpleText'>Concluídas</span>
-            {/* Mostrar tasks concluidas e tasks totais */}
             <span>{`${ completedTasks.length } de ${ tasks.length }`}</span>
           </div>
         </aside>
